@@ -1,0 +1,21 @@
+{
+  "name": "site",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:force": "astro dev --force",
+    "clean": "rm -rf .astro dist node_modules/.vite",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/simple-icons": "^1.2.70",
+    "astro": "^5.17.1",
+    "astro-icon": "^1.1.5",
+    "lucide-astro": "^0.556.0",
+    "tailwind-merge": "^3.4.0"
+  }
+}

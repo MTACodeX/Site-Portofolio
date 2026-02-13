@@ -1,0 +1,258 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ChallengeCard from "../../../../components/ChallengeCard.astro";
+import { loadAllEvents, loadChallengesForEvent } from "../../../../utils/writeups";
+import { Icon } from "astro-icon/components";
+import { getCategoryIcon } from "../../../../utils/iconMap";
+
+export async function getStaticPaths() {
+  const events = await loadAllEvents();
+  return events.map((e) => ({
+    params: { year: String(e.meta.year), event: e.meta.slug },
+    props: { eventDir: e.dirName, meta: e.meta },
+  }));
+}
+
+const { eventDir, meta } = Astro.props as any;
+
+const challenges = await loadChallengesForEvent({
+  eventDir,
+  year: Number(Astro.params.year),
+  eventSlug: Astro.params.event!,
+});
+
+const categories = ["All", ...new Set(challenges.map((c) => c.meta.category))];
+---
+
+<BaseLayout title={meta.name}>
+  <section class="page-header">
+    <div class="container headerInner">
+      <div class="kicker">
+        <Icon name="mdi:trophy-outline" class="kickerIcon" />
+        Event
+      </div>
+
+      <h1 class="arcade-title">{meta.name}</h1>
+      <p class="subtitle">{meta.format}</p>
+
+      <div class="headerActions">
+        <a class="backBtn" href="/writeups">
+          <Icon name="mdi:arrow-left" class="btnIcon" />
+          Back
+        </a>
+
+        {meta.url && (
+          <a class="linkBtn" href={meta.url} target="_blank" rel="noreferrer">
+            <Icon name="mdi:open-in-new" class="btnIcon" />
+            Open URL
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <main class="container main">
+    <div class="stats">
+      <div class="stat card card--pixel">
+        <div class="card__inner">
+          <Icon name="mdi:map-marker-outline" class="kickerIcon" />
+          <span class="label">Location</span>
+          <strong class="value">{meta.location}</strong>
+        </div>
+      </div>
+
+      <div class="stat card card--pixel">
+        <div class="card__inner">
+          <Icon name="mdi:shape-outline" class="kickerIcon" />
+          <span class="label">Format</span>
+          <strong class="value">{meta.format}</strong>
+        </div>
+      </div>
+
+      <div class="stat card card--pixel">
+        <div class="card__inner">
+          <Icon name="mdi:link-variant" class="kickerIcon" />
+          <span class="label">URL</span>
+          <strong class="value">{meta.url ?? "N/A"}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter card card--pixel">
+      <div class="card__inner filterInner">
+        <span class="filterLabel">Filter:</span>
+
+        <div class="filterBtns">
+          {categories.map((c) => (
+            <button class="cat" data-cat={c} type="button">
+              {c !== "All" && <Icon name={getCategoryIcon(c)} class="catIcon" />}
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" id="grid">
+      {challenges.map((c) => (
+        <div class="gridItem" data-cat={c.meta.category}>
+          <ChallengeCard {...c.meta} />
+        </div>
+      ))}
+    </div>
+  </main>
+
+  <style>
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.76);
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: none;
+      justify-content: center;
+    }
+
+    .arcade-title {
+      margin-top: 0px;
+      margin-bottom: 2px;
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4.2vw, 3rem);
+      letter-spacing: 2px;
+      text-transform: none;
+      color: rgba(245, 158, 11, 0.95);
+      text-shadow:
+        0 0 14px rgba(245, 158, 11, 0.35),
+        0 0 36px rgba(245, 158, 11, 0.22);
+      word-break: break-word;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+      margin-top: 0px;
+    }
+
+    .headerActions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btnIcon { width: 18px; height: 18px; opacity: 0.9; }
+
+    .backBtn,
+    .linkBtn {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: .15s ease;
+    }
+
+    .backBtn:hover,
+    .linkBtn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.95);
+      transform: translateY(-1px);
+    }
+
+    .main { padding-top: 12px; padding-bottom: 34px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .stat .card__inner { padding: 14px; }
+    .label { font-size: 1rem; color: rgba(255, 255, 255, 0.806); font-family: var(--font-display); letter-spacing: 1px; text-transform: uppercase; }
+    .value { display: block; margin-top: 6px; color: rgba(255,255,255,0.92); font-weight: 800; }
+
+    .filter { margin-top: 12px; }
+    .filterInner { padding: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .filterLabel { color: rgba(255, 255, 255, 0.6); font-family: var(--font-family); font-size: 1rem; letter-spacing: 1px; text-transform: none; }
+    .filterBtns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .cat {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 7px 10px;
+      border-radius: 3px;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.9rem;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .cat:hover { background: rgba(255, 255, 255, 0.368); }
+
+    .cat.active {
+      background: rgba(255, 255, 255, 0.243);
+      border-color: rgba(255, 255, 255, 0.171);
+      color: rgba(253, 254, 253, 0.98);
+    }
+
+    .catIcon { width: 16px; height: 16px; opacity: 0.9; }
+
+    .grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .arcade-title { font-size: 1.30rem; letter-spacing: 1px; line-height: 1.2; }
+      .subtitle { font-size: 1.08rem; }
+      .filterInner { justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .kicker { font-size: 0.62rem; padding: 7px 10px; border-radius: 12px; }
+      .subtitle { font-size: 0.8rem; }
+      .backBtn, .linkBtn { font-size: 0.7rem; padding: 9px 12px; }
+      .label { font-size: 0.9rem; }
+      .filterLabel { font-size: 0.9rem; }
+      .value { font-size: 0.8rem; }
+      .cat { font-size: 0.8rem; }
+    }
+  </style>
+
+  <script is:inline>
+    const btns = [...document.querySelectorAll(".cat")];
+    const items = [...document.querySelectorAll(".gridItem")];
+
+    function setActive(cat) {
+      btns.forEach((b) => b.classList.toggle("active", b.dataset.cat === cat));
+      items.forEach((i) => {
+        i.style.display = cat === "All" || i.dataset.cat === cat ? "" : "none";
+      });
+    }
+
+    btns.forEach((b) =>
+      b.addEventListener("click", () => setActive(b.dataset.cat))
+    );
+
+    setActive("All");
+  </script>
+</BaseLayout>

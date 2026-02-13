@@ -1,0 +1,320 @@
+---
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { loadAllEvents, loadChallengesForEvent } from "../../../../../utils/writeups";
+import { getCategoryIcon } from "../../../../../utils/iconMap";
+import { Icon } from "astro-icon/components";
+
+export async function getStaticPaths() {
+  const events = await loadAllEvents();
+  const paths: any[] = [];
+
+  for (const e of events) {
+    const ch = await loadChallengesForEvent({
+      eventDir: e.dirName,
+      year: e.meta.year,
+      eventSlug: e.meta.slug,
+    });
+
+    for (const c of ch) {
+      paths.push({
+        params: {
+          year: String(e.meta.year),
+          event: e.meta.slug,
+          category: c.meta.categorySlug,
+          challenge: c.meta.slug,
+        },
+        props: { eventDir: e.dirName, eventMeta: e.meta },
+      });
+    }
+  }
+  return paths;
+}
+
+const { eventDir, eventMeta } = Astro.props as any;
+
+const challenges = await loadChallengesForEvent({
+  eventDir,
+  year: Number(Astro.params.year),
+  eventSlug: Astro.params.event!,
+});
+
+const current = challenges.find((c) => c.meta.slug === Astro.params.challenge);
+if (!current) throw new Error("Writeup not found");
+
+const { Content, meta } = current;
+---
+
+<BaseLayout title={meta.title}>
+  <section class="page-header">
+    <div class="container">
+      <div class="kicker">
+        <Icon name="mdi:file-document-outline" class="kickerIcon" />
+        Writeups
+      </div>
+      <h1 class="arcade-title">{meta.title}</h1>
+      <p class="subtitle">{eventMeta.name} ⇝ {meta.category}</p>
+      <div class="headerActions">
+        <a class="backBtn" href={`/writeups/${Astro.params.year}/${Astro.params.event}`}>
+          <Icon name="mdi:arrow-left" class="btnIcon" />
+          Back
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container main">
+    <div class="paper card card--pixel">
+      <div class="card__inner">
+        <div class="metaRow">
+          <span class="metaPill">
+            <Icon name="mdi:trophy-outline" class="metaIcon" />
+            {meta.points} pts
+          </span>
+          <span class="metaPill">
+            <Icon name="mdi:account-multiple-outline" class="metaIcon" />
+            {meta.solves} solves
+          </span>
+        </div>
+
+        <article class="prose">
+          <div class="deskripsi">
+            <span class="desc-label">Deskripsi Challenges:</span>
+            <span class="desc-text">{meta.description}</span>
+          </div>
+          <Content />
+
+          {meta.flag && (
+            <h2>Results</h2>
+            <div class="flag-card">
+              <Icon name="mdi:flag" class="IconFlag" />
+              <span class="flag-text1">{meta.title} Flag is: </span>
+              <span class="flag-text">{meta.flag}</span>
+            </div>
+          )}
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.76);
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: none;
+      justify-content: center;
+    }
+
+    .arcade-title {
+      margin-top: 0px;
+      margin-bottom: 2px;
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4.2vw, 3rem);
+      letter-spacing: 2px;
+      text-transform: none;
+      color: rgba(245, 158, 11, 0.95);
+      text-shadow:
+        0 0 14px rgba(245, 158, 11, 0.35),
+        0 0 36px rgba(245, 158, 11, 0.22);
+      word-break: break-word;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+      margin-top: 0px;
+    }
+
+    .deskripsi {
+      margin-bottom: 15px;
+      margin-top: 10px;
+    }
+
+    .desc-label {
+      font-size: 1.3rem;
+      font-weight:bold;
+      margin-right:6px;
+    }
+
+    .desc-text {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.75);
+    }
+
+
+    .headerActions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btnIcon { width: 18px; height: 18px; opacity: 0.9; }
+
+    .backBtn {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: .15s ease;
+    }
+
+    .IconFlag {
+      color: white;
+    }
+
+    .backBtn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.95);
+      transform: translateY(-1px);
+    }
+
+    .main { padding-top: 12px; padding-bottom: 34px; }
+
+    .paper .card__inner { padding: 16px; }
+
+    .metaRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      justify-content: flex-start;
+    }
+
+    .metaPill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.78);
+      font-family: var(--font-family);
+      font-size: 1rem;
+    }
+
+    .metaIcon { width: 16px; height: 16px; opacity: 0.9; }
+
+    /* Prose nyaman */
+    .prose :global(h1, h2, h3, h4) {
+      margin-top: 20px;
+      margin-bottom: 6px;
+      color: rgba(255,255,255,0.92);
+      font-weight: 600;
+      font-family: var(--font-family);
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      text-transform: none;
+    }
+
+    .prose :global(p) {
+      color: rgba(255,255,255,0.75);
+      line-height: 1.75;
+      font-size: 1.1rem;
+    }
+
+    .prose :global(a) {
+      color: rgba(34,197,94,0.95);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .prose :global(pre) {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .prose :global(code) {
+      color: rgba(226, 255, 236, 0.92);
+      font-size: 1.1rem;
+    }
+
+    .prose :global(img) {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      margin: 15px 0;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 7px;
+    }
+
+    .prose + .flag-card {
+      margin-top:24px;
+    }
+
+    :global(.flag-card) {
+      margin:4px 0;
+      padding:20px;
+      border-radius:8px;
+      color: rgba(255,255,255,0.05);;
+      border:1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      text-align:center;
+      cursor:pointer;
+    }
+
+    :global(.flag-text1) {
+      font-family:var(--font-display);
+      font-size:1rem;
+      letter-spacing:1px;
+      color: rgb(255, 255, 255);
+    }
+
+    :global(.flag-text) {
+      font-family:var(--font-family);
+      font-size:1rem;
+      text-decoration: underline;
+      letter-spacing:1px;
+      color: rgba(34,197,94,0.95);
+      filter:blur(10px);
+      transition:.3s ease;
+    }
+
+    :global(.flag-card:hover .flag-text) {
+      filter:blur(0);
+    }
+
+    @media (max-width: 768px) {
+      .arcade-title { font-size: 1.30rem; letter-spacing: 1px; line-height: 1.2; }
+      .subtitle { font-size: 1.08rem; }
+      .prose :global(p) { font-size: 0.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .metaPill { font-size: 0.7rem; }
+      .prose :global(p) { font-size: 0.8rem; }
+      .prose :global(code) { font-size: 0.8rem; }
+      .prose :global(h1, h2, h3, h4) { font-size: 1rem; }
+      .desc-label { font-size: 1rem; }
+      .desc-text { font-size: 0.8rem; }
+      :global(.flag-text1) {
+        font-size:0.8rem;
+      }
+      :global(.flag-text) {
+        font-size:0.8rem;
+      }
+      
+      .kicker { font-size: 0.62rem; padding: 7px 10px; border-radius: 12px; }
+      .subtitle { font-size: 0.8rem; }
+    }

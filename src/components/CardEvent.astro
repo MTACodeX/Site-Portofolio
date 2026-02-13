@@ -1,0 +1,131 @@
+---
+import { Icon } from "astro-icon/components";
+import { getCategoryIcon } from "../utils/iconMap";
+
+const { name, start, end, challengeCount, team, categories, href } = Astro.props as {
+  name: string;
+  start: string;
+  end: string;
+  challengeCount: number;
+  team: boolean;
+  categories: string[];
+  href: string;
+};
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric" });
+
+const catBadge = (c: string) => {
+  const s = c.toLowerCase();
+  if (s.includes("forensic")) return "badge badge--green";
+  if (s.includes("binary") || s.includes("pwn")) return "badge badge--amber";
+  if (s.includes("reverse")) return "badge badge--purple";
+  if (s.includes("web")) return "badge badge--cyan";
+  if (s.includes("mobile")) return "badge badge--amber";
+  if (s.includes("misc")) return "badge";
+  return "badge";
+};
+---
+
+<a class="card card--pixel eventCard" href={href}>
+  <div class="card__inner">
+    <div class="eventTop">
+      <h2 class="h-title eventTitle">{name}</h2>
+    </div>
+
+    <div class="eventMeta">
+      <span class="metaItem">
+        <Icon name="mdi:calendar-range" class="metaIcon" />
+        <p>{fmtDate(start)} → {fmtDate(end)}</p>
+      </span>
+      <span class="metaSep">◈</span>
+      <span class="metaItem">
+        <Icon name="mdi:checkbox-multiple-blank-outline" class="metaIcon" />
+        <p>{challengeCount} challenges</p>
+      </span>
+      <span class="metaSep">◈</span>
+      <span class="metaItem">
+        <Icon name="mdi:account-group-outline" class="metaIcon" />
+        <p>{team ? "Team" : "Solo"}</p>
+      </span>
+    </div>
+
+    <div class="eventTags">
+      {categories.map((c) => (
+        <span class={catBadge(c)}>
+          <Icon name={getCategoryIcon(c)} class="tagIcon" />
+          <span class="tagText">{c}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</a>
+
+<style>
+  /* Komponen ini sekarang “numpang” theme dari global.css */
+  .eventCard {
+    display: block;
+    text-decoration: none;
+  }
+
+  .eventTitle {
+    font-weight: bold;
+    color: rgba(245, 159, 11, 0.861);
+  }
+
+  .eventMeta {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+
+  .metaItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .metaItem p {
+    font-size: 0.9rem;
+  }
+
+  .metaIcon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.9;
+  }
+
+  .metaSep {
+    opacity: 0.45;
+  }
+
+  .eventTags {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tagIcon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.95;
+  }
+
+  .tagText {
+    line-height: 1;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width:480px){
+    .metaItem p{font-size:0.7rem;}
+    .tagText{font-size:0.7rem;}
+    .eventTitle{font-size:1.3rem;}
+  }
+
+</style>

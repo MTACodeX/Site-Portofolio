@@ -1,0 +1,316 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TerminalHero from "../components/TerminalHero.astro";
+import bingkaiImage from "../assets/bingkai.jpg";
+import { Icon } from "astro-icon/components";
+import Skills from "../components/Skills.astro";
+---
+
+<BaseLayout title="Home">
+  <div class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <!-- HEADER KIRI -->
+        <div class="hero-head">
+          <div class="hero-kicker">
+            <Icon name="mdi:home-variant-outline" class="kickerIcon" />
+            Home
+          </div>
+          <h1 class="arcade-title">PLAYER_STATS</h1>
+          <p class="hero-sub">
+            PROFILE_SECURE_SECTOR ⋟ Back-End Develover ⊶ Cyber Security Enthusiast
+          </p>
+        </div>
+
+        <!-- IMAGE KANAN (SEJAJAR KICKER) -->
+        <div class="hero-image">
+          <div class="card-image-frame" aria-label="Profile image card">
+            <div class="card-image-inner">
+              <div class="shine"></div>
+              <img src={bingkaiImage.src} alt="Profile Image" />
+            </div>
+          </div>
+        </div>
+
+        <!-- TERMINAL KIRI BAWAH -->
+        <section class="container-main">
+          <div class="hero-terminal">
+            <TerminalHero />
+          </div>
+        </section>
+      </div>
+    </section>
+    <Skills />
+  </div>
+</BaseLayout>
+
+<style>
+/* =========================================================
+   HERO LAYOUT – GRID 2 ROWS (biar image sejajar kicker)
+   ========================================================= */
+.hero {
+  padding-block: clamp(42px, 8vw, 110px);
+}
+
+.hero-grid {
+  display: grid;
+
+  /* 2 kolom: kiri konten, kanan image */
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.55fr);
+
+  /* 2 baris: header + terminal */
+  grid-template-rows: auto 1fr;
+
+  gap: clamp(20px, 4vw, 56px);
+  align-items: start;
+}
+
+/* posisi elemen dalam grid */
+.hero-head {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.hero-image {
+  grid-column: 2;
+  grid-row: 1 / span 2; /* <- kunci: image ikut dari atas */
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.hero-terminal {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/* =========================================================
+   HEADER STYLE
+   ========================================================= */
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.76);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+
+.kickerIcon { width: 15px; height: 18px; opacity: 0.9; }
+
+.arcade-title {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 4.2vw, 3rem);
+  letter-spacing: 2px;
+  text-transform: none;
+
+  /* kuning neon seperti contoh */
+  color: rgba(245, 158, 11, 0.95);
+  text-shadow: 0 0 14px rgba(245, 158, 11, 0.35),
+    0 0 36px rgba(245, 158, 11, 0.22);
+
+  /* anti overflow */
+  word-break: break-word;
+}
+
+.hero-sub {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+
+/* =========================================================
+   IMAGE CARD – ANIMATION (sinkron theme)
+   ========================================================= */
+.card-image-frame {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 3 / 4;
+
+  border-radius: 22px;
+  padding: 3px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.06)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset,
+    0 18px 60px rgba(0, 0, 0, 0.55);
+
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+}
+
+.card-image-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 13px;
+  overflow: hidden;
+
+  background: rgba(10, 14, 28, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.card-image-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(0.55);
+  transition: filter 0.5s ease-out;
+}
+
+.card-image-frame:hover img {
+  filter: grayscale(0%) brightness(1);
+}
+
+/* Shine effect */
+.card-image-frame .shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 19px;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(245, 158, 11, 0.22),
+    rgba(34, 197, 94, 0.1),
+    transparent 58%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-image-frame:hover .shine {
+  opacity: 1;
+}
+
+/* =========================================================
+   RESPONSIVE (Tablet)
+   ========================================================= */
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .hero-head {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: center;
+  }
+
+  .hero-image {
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: center;
+  }
+
+  .hero-terminal {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE (Mobile Fix - biar tidak kebesaran)
+   ========================================================= */
+@media (max-width: 768px) {
+  .arcade-title {
+    font-size: 1.55rem;
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+
+  .arcade-title {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-sub {
+    font-size: 0.8rem;
+  }
+
+  .card-image-frame {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding-block: 28px;
+  }
+
+  .hero-kicker {
+    font-size: 0.62rem;
+    padding: 7px 10px;
+    border-radius: 12px;
+  }
+
+  .arcade-title {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-sub {
+    font-size: 0.8rem;
+  }
+
+  .card-image-frame {
+    max-width: 260px;
+    border-radius: 18px;
+  }
+
+  .card-image-inner {
+    border-radius: 15px;
+  }
+}
+</style>
+
+<script>
+const card = document.querySelector('.card-image-frame');
+
+if (card) {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * 12;
+    const rotateY = ((centerX - x) / centerX) * 12;
+
+    card.style.transform = `
+      perspective(900px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      scale(1.03)
+    `;
+
+    card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+    card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = `
+      perspective(900px)
+      rotateX(0deg)
+      rotateY(0deg)
+      scale(1)
+    `;
+  });
+}
+</script>

@@ -1,0 +1,143 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/CardProjects.astro";
+import { Icon } from "astro-icon/components";
+import projects from "../data/projects.json";
+
+const images = import.meta.glob('../assets/projects/*.{jpg,png,jpeg,webp}', {
+  eager: true
+});
+
+const getImage = (fileName: string) => {
+  const path = `../assets/projects/${fileName}`;
+  return images[path];
+};
+---
+
+<BaseLayout title="Projects">
+  <section class="page-header">
+    <div class="container">
+      <div class="hero-kicker">
+        <Icon name="mdi:view-dashboard-outline" class="kickerIcon" />
+        Projects
+      </div>
+      <div class="kicker">
+        <h1>MY_PROJECTS</h1>
+      </div>
+      <p>
+        My tools, experiments, writeup helpers, and security-related side projects.
+      </p>
+    </div>
+  </section>
+
+  <main class="container main">
+    <div class="grid">
+      {projects.length > 0 ? (
+        projects.map((project) => (
+          <div class="gridItem">
+            <Card {...project} 
+             image={getImage(project.image)}
+            />
+          </div>
+        ))
+      ) : (
+        <div class="empty-state card card--pixel">
+          <div class="card__inner">
+            <Icon name="mdi:folder-open-outline" class="empty-icon" />
+            <h2>Projects Not Available</h2>
+            <p>Currently, there are no projects that have been published.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  </main>
+
+  <style>
+    /* ===== HEADER STYLE (SAMAKAN DENGAN REFERENCE) ===== */
+
+    .headerInner {
+      text-align: center;
+    }
+
+    /* ===== MAIN ===== */
+
+    .main {
+      padding-top: 12px;
+      padding-bottom: 34px;
+    }
+
+    /* ===== GRID SAMA SEPERTI REFERENCE ===== */
+
+    .grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 40px;
+    }
+
+    .gridItem {
+      display: flex;
+    }
+
+    /* ===== EMPTY STATE PIXEL STYLE ===== */
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+    }
+
+    .empty-state .card__inner {
+      padding: 40px 20px;
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+      opacity: 0.7;
+    }
+
+    .empty-state h2 {
+      margin: 8px 0;
+      font-size: 1.4rem;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .empty-state p {
+      font-size: 1.05rem;
+      opacity: 0.8;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ===== RESPONSIVE ===== */
+
+    @media (max-width: 768px) {
+     .grid {
+        grid-template-columns:1fr;
+        gap:24px;
+      }
+
+      .empty-state h2 {
+        font-size: 1.1rem;
+      }
+
+      .empty-state p {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns:1fr;
+        gap:24px;
+      }
+
+      .empty-state h2 {
+        font-size: 1.1rem;
+      }
+
+      .empty-state p {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</BaseLayout>

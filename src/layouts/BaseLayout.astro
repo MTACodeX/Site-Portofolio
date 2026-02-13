@@ -1,0 +1,157 @@
+---
+import Navbar from '../components/Navbar.astro';
+import Footer from "../components/Footer.astro";
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  currentPage?: 'home' | 'writeup' | 'myproject';
+}
+
+const { 
+  title = 'mtacodex.dev', 
+  description = 'Personal portfolio and project showcase',
+  currentPage = 'home'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+
+  <body>
+    <canvas id="bg-canvas"></canvas>
+    <Navbar />
+
+    <main class="main-wrapper">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<script>
+const canvas = document.getElementById("bg-canvas");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+let mouse = { x: null, y: null, active: false };
+
+const isMobile = window.innerWidth < 768;
+
+const PARTICLE_COUNT = isMobile ? 40 : 90;
+const CONNECT_DISTANCE = isMobile ? 8000 : 12000;
+const MOUSE_DISTANCE = isMobile ? 0 : 15000;
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * (isMobile ? 0.3 : 0.6);
+    this.vy = (Math.random() - 0.5) * (isMobile ? 0.3 : 0.6);
+    this.radius = Math.random() * 1.4 + 0.5;
+  }
+
+  move() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.fill();
+  }
+}
+
+function connectParticles() {
+  for (let a = 0; a < particles.length; a++) {
+    for (let b = a; b < particles.length; b++) {
+      let dx = particles[a].x - particles[b].x;
+      let dy = particles[a].y - particles[b].y;
+      let distance = dx * dx + dy * dy;
+
+      if (distance < CONNECT_DISTANCE) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255,255,255,0.05)";
+        ctx.lineWidth = 1;
+        ctx.moveTo(particles[a].x, particles[a].y);
+        ctx.lineTo(particles[b].x, particles[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function connectToMouse() {
+  if (isMobile || !mouse.active) return;
+
+  particles.forEach(p => {
+    let dx = p.x - mouse.x;
+    let dy = p.y - mouse.y;
+    let distance = dx * dx + dy * dy;
+
+    if (distance < MOUSE_DISTANCE) {
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(6,182,212,0.28)";
+      ctx.lineWidth = 1.2;
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.stroke();
+    }
+  });
+}
+
+function init() {
+  particles = [];
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new Particle());
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+    p.move();
+    p.draw();
+  });
+
+  connectParticles();
+  connectToMouse();
+
+  requestAnimationFrame(animate);
+}
+
+if (!isMobile) {
+  window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.active = true;
+  });
+
+  window.addEventListener("mouseleave", () => {
+    mouse.active = false;
+  });
+}
+
+init();
+animate();
+</script>

@@ -1,0 +1,158 @@
+---
+const currentPath = Astro.url.pathname;
+
+function isActive(path: string) {
+  if (path === '/' && currentPath === '/') return true;
+  if (path !== '/' && currentPath.startsWith(path)) return true;
+  return false;
+}
+---
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="navbar-logo">
+      <span class="logo-text">mtacodex</span><span class="logo-dot">.</span><span class="logo-dev">dev</span>
+    </a>
+
+    <ul class="navbar-menu desktop">
+      <li><a href="/" class={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</a></li>
+      <li><a href="/writeups" class={`nav-link ${isActive('/writeups') ? 'active' : ''}`}>Writeups</a></li>
+      <li><a href="/projects" class={`nav-link ${isActive('/projects') ? 'active' : ''}`}>Projects</a></li>
+      <li><a href="/contact" class={`nav-link ${isActive('/contact') ? 'active' : ''}`}>Contact</a></li>
+    </ul>
+
+    <button class="menu-toggle" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</a>
+    <a href="/writeups" class={`nav-link ${isActive('/writeups') ? 'active' : ''}`}>Writeups</a>
+    <a href="/projects" class={`nav-link ${isActive('/projects') ? 'active' : ''}`}>Projects</a>
+    <a href="/contact" class={`nav-link ${isActive('/contact') ? 'active' : ''}`}>Contact</a>
+  </div>
+</nav>
+
+<script client:load>
+  const toggle = document.querySelector('.menu-toggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  toggle?.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!mobileMenu.contains(e.target) && !toggle.contains(e.target)) {
+      mobileMenu.classList.remove('open');
+    }
+  });
+</script>
+
+<style>
+.navbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 1000;
+
+  background: rgb(11, 16, 32);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.nav-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 14px clamp(18px, 5vw, 80px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+}
+
+.logo-text { color: rgba(255,255,255,.92); font-family: var(--font-display); }
+.logo-dot  { color: var(--accent-emerald); font-family: var(--font-display); }
+.logo-dev  { color: rgba(255,255,255,.72); font-family: var(--font-display); }
+
+.navbar-menu {
+  display: flex;
+  gap: 18px;
+  list-style: none;
+}
+
+.nav-link {
+  color: rgba(255,255,255,.72);
+  position: relative;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: .15s ease;
+  font-size: 1rem;
+}
+
+.nav-link:hover {
+  color: rgba(255,255,255,.92);
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.12);
+}
+
+.nav-link.active {
+  color: rgba(255,255,255,.95);
+  background: rgba(255,255,255,.06);
+  border-color: rgba(69, 75, 71, 0.25);
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 22px;
+  height: 2px;
+  background: rgba(255,255,255,.92);
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 64px;
+  right: 18px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+
+  background: rgba(11, 16, 32, 0.95);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.6);
+}
+
+.mobile-menu.open { display: flex; }
+
+@media (max-width: 768px) {
+  .navbar-menu.desktop { display: none; }
+  .menu-toggle { display: flex; }
+
+  .navbar-logo {
+  font-size: 1.1rem;
+  }
+  .nav-link {
+  font-size: 0.8rem;
+  }
+}
+</style>

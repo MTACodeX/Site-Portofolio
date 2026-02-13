@@ -1,0 +1,433 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<BaseLayout title="Contact">
+  <section class="page-header">
+    <div class="container">
+      <div class="hero-kicker">
+        <Icon name="mdi:email-outline" class="kickerIcon" />
+        Contact
+      </div>
+      <div class="kicker">
+        <h1>CONTACT_ME</h1>
+      </div>
+      <p>
+      Please contact me for more information or questions related to mtacodex.dev or other topics. I will respond to your message within a maximum of 24 hours.
+      </p>
+    </div>
+  </section>
+
+  <main class="container main">
+    <div class="contact-info card card--pixel">
+      <div class="card__inner">
+        <div class="info-kicker">
+          <Icon name="mdi:radio-tower" class="kickerIcon" />
+          CHANNELS
+        </div>
+
+        <h2 class="info-title">SEND_A_MESSAGE</h2>
+
+        <p class="info-text">
+          Fill out the form, your message will be sent via Email.
+        </p>
+
+        <div class="info-badges">
+          <span class="badge badge--green">
+            <Icon name="mdi:clock-fast" class="badgeIcon" />
+            <p>RESPONSE &lt; 24H</p>
+          </span>
+
+          <span class="badge badge--cyan">
+            <Icon name="mdi:shield-lock-outline" class="badgeIcon" />
+            <p>FORM_SECURE</p>
+          </span>
+
+          <span class="badge badge--amber">
+            <Icon name="mdi:timer-sand" class="badgeIcon" />
+            <p>COOLDOWN_ON</p>
+          </span>
+        </div>
+
+        <div class="info-note">
+          <Icon name="mdi:information-outline" class="noteIcon" />
+          <p>Noted: write details (bug, project, or other questions).</p>
+        </div>
+
+        <form id="contact-form" class="contact-form">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" type="text" name="name" placeholder="Your Name" required />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="email@gmail.com" required />
+          </div>
+
+          <div class="field">
+            <label for="message">Message content</label>
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Please write the message you want to convey."
+              rows="8"
+              required
+            ></textarea>
+          </div>
+
+          <input type="text" name="_gotcha" style="display:none" />
+
+          <div class="actions">
+            <button type="submit" class="btn btn--accent">
+              <Icon name="mdi:send" class="btnIcon" />
+              <p>Send</p>
+            </button>
+            <span class="hint">Powered by Formspree</span>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="form-status" class="toast"></div>
+  </main>
+</BaseLayout>
+
+  <script>
+    const form = document.getElementById("contact-form");
+    const toast = document.getElementById("form-status");
+    const submitBtn = form?.querySelector("button");
+
+    const COOLDOWN = 15; // detik
+    let lastSubmitTime = 0;
+    let cooldownTimer = null;
+
+    // SVG icon (biar bisa dipakai dari JS tanpa import)
+    const ICONS = {
+      loading: `
+        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2a10 10 0 1 0 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `,
+      success: `
+        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+          <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      `,
+      error: `
+        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `,
+      warning: `
+        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+          <path d="M12 9v4m0 4h.01M10.29 3.86l-8.5 14.72A2 2 0 0 0 3.5 21h17a2 2 0 0 0 1.71-2.42l-8.5-14.72a2 2 0 0 0-3.42 0Z"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      `
+    };
+
+    function showToast(message, type = "", autoHide = true) {
+      if (!toast) return;
+
+      toast.className = `toast show ${type}`.trim();
+      toast.innerHTML = message;
+
+      if (autoHide) {
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 4000);
+      }
+    }
+
+    function startCooldown(seconds) {
+      if (!submitBtn) return;
+      submitBtn.disabled = true;
+
+      let remaining = seconds;
+
+      showToast(
+        `${ICONS.warning} Terlalu banyak percobaan. Tunggu <span class="countdown">${remaining}</span> detik`,
+        "warning",
+        false
+      );
+
+      cooldownTimer = setInterval(() => {
+        remaining--;
+        const cd = toast?.querySelector(".countdown");
+        if (cd) cd.textContent = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(cooldownTimer);
+          submitBtn.disabled = false;
+          toast?.classList.remove("show");
+        }
+      }, 1000);
+    }
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const now = Date.now();
+      const diff = Math.floor((now - lastSubmitTime) / 1000);
+
+      if (diff < COOLDOWN) {
+        startCooldown(COOLDOWN - diff);
+        return;
+      }
+
+      lastSubmitTime = now;
+      if (submitBtn) submitBtn.disabled = true;
+
+      showToast(`${ICONS.loading} Mengirim pesan...`);
+
+      try {
+        const res = await fetch("https://formspree.io/f/mojlbwdl", {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" }
+        });
+
+        if (res.ok) {
+          form.reset();
+          showToast(`${ICONS.success} Pesan berhasil terkirim!`, "success");
+        } else {
+          showToast(`${ICONS.error} Gagal mengirim pesan.`, "error");
+        }
+      } catch {
+        showToast(`${ICONS.error} Koneksi bermasalah.`, "error");
+      } finally {
+        setTimeout(() => {
+          if (submitBtn) submitBtn.disabled = false;
+        }, 2000);
+      }
+    });
+    
+    const reveals = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+          }
+        });
+      },
+      {
+        threshold: 0.15,
+      }
+    );
+
+    reveals.forEach((el) => observer.observe(el));
+  </script>
+
+<style>
+  /* =========================================================
+      CONTACT PAGE – theme sync + responsive
+      ========================================================= */
+
+  .card__inner .contact-card .card__inner {
+    padding: 18px;
+  }
+
+  .contact-info {
+  margin-bottom: 40px;
+
+  }
+
+  .info-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.76);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .info-title {
+    margin-top: 14px;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .info-text {
+    margin-top: 10px;
+    color: rgba(255,255,255,0.72);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .badge p{
+    font-size: 1rem;
+    color: rgb(255, 255, 255);
+  }
+
+  .info-badges {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;  
+  }
+
+  .badgeIcon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.9;
+  }
+
+  .info-note {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.72);
+    font-size: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .noteIcon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.9;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Form tweaks */
+  .contact-form {
+    gap: 14px;
+    margin-top: 15px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field label {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.78);
+    text-transform: none;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    border-radius: 7px;
+    background: rgba(255,255,255,0.03);
+    font-family: var(--font-family);
+    font-size: 1rem;
+  }
+
+  .actions {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hint {
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+  }
+
+  .btnIcon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.95;
+  }
+
+  .toast {
+    font-size: 1rem;
+  }
+
+  /* Toast icon style (untuk SVG yang dibuat di JS) */
+  :global(.toastIcon) {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: -3px;
+    opacity: 0.95;
+    animation: spin 0.9s linear infinite;
+  }
+
+  /* stop spin untuk selain loading */
+  :global(.toast.success .toastIcon),
+  :global(.toast.error .toastIcon),
+  :global(.toast.warning .toastIcon) {
+    animation: none;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Toast warning */
+  :global(.toast.warning) {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: rgba(255, 214, 140, 0.95);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .info-title {
+      font-size: 1.1rem;
+    }
+
+    .info-text {
+      font-size: 0.8rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      font-size: 0.8rem;
+    }
+
+    .field label {
+      font-size: 0.9rem;
+    }
+
+    .info-note p {
+      font-size: 0.8rem;
+    }
+
+    .badge p {
+      font-size: 0.8rem;
+    }
+
+    .toast {
+      font-size: 0.8rem;
+    }
+
+    .actions p {
+      font-size: 0.8rem;
+    }
+
+    .hint {
+      font-size: 0.7rem;
+    }
+  }
+</style>

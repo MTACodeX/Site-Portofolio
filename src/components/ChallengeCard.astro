@@ -1,0 +1,233 @@
+---
+import { Icon } from "astro-icon/components";
+import { getCategoryIcon } from "../utils/iconMap";
+
+const { title, category, points, solves, href } = Astro.props as {
+  title: string;
+  category: string;
+  points: number;
+  solves: number;
+  href: string;
+};
+
+const catColor = (c: string) => {
+  const s = c.toLowerCase();
+  if (s.includes("forensic")) return "pill-green";
+  if (s.includes("binary") || s.includes("pwn")) return "pill-red";
+  if (s.includes("reverse")) return "pill-purple";
+  if (s.includes("web")) return "pill-blue";
+  if (s.includes("mobile")) return "pill-orange";
+  if (s.includes("misc")) return "pill-gray";
+  return "pill-gray";
+};
+---
+
+<a class="wizCard" href={href}>
+  <div class="wizHeader">
+    <div class="wizTitle">Challenge</div>
+    <div class="wizWinBtns">
+      <Icon name="mdi:window-minimize" class="winIcon" />
+      <Icon name="mdi:window-maximize" class="winIcon" />
+      <Icon name="mdi:close" class="winIcon winClose" />
+    </div>
+  </div>
+
+  <div class="wizBody">
+    <div class="chTitle">
+      {title}
+    </div>
+
+    <div class="chTag">
+      <span class={`pill ${catColor(category)}`}>
+        <Icon name={getCategoryIcon(category)} class="pillIcon" />
+        <p class="pillText">{category}</p>
+      </span>
+    </div>
+
+    <div class="chMeta">
+      <span class="metaPill">
+        <Icon name="mdi:trophy-outline" class="metaIcon" />
+        <p>{points} pts</p>
+      </span>
+      <span class="metaPill">
+        <Icon name="mdi:account-multiple-outline" class="metaIcon" />
+        <p>{solves} solves</p>
+      </span>
+    </div>
+
+    <div class="scanlines"></div>
+  </div>
+</a>
+
+<style>
+/* ================= CARD ================= */
+.wizCard{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  text-decoration:none;
+  color:inherit;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(12,16,28,0.55);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.35) inset,
+    0 18px 60px rgba(0,0,0,0.55);
+  transition:.15s ease;
+  overflow:hidden;
+  position:relative;
+}
+
+.wizCard:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.18);
+  background:rgb(12,16,28);
+}
+
+/* ================= HEADER ================= */
+.wizHeader{
+  height:44px;
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0.12)
+  );
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.wizTitle{
+  font-size:1rem;
+  color:rgba(255,255,255,0.80);
+}
+
+.wizWinBtns{
+  margin-left:auto;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.winIcon{
+  width:16px;
+  height:16px;
+  opacity:.65;
+  transition:.15s;
+}
+
+.winIcon:hover{
+  opacity:1;
+  transform:translateY(-1px);
+}
+
+.winClose:hover{
+  color:#ef4444;
+}
+
+/* ================= BODY ================= */
+.wizBody{
+  position:relative;
+  padding:14px 14px 16px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+/* FIX HEIGHT SYNC */
+.chTitle{
+  font-size:1.25rem;
+  font-weight:bold;
+  color:rgba(245,158,11,0.95);
+  line-height:1.2;
+
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+
+  min-height:3rem; /* biar semua title punya tinggi sama */
+}
+
+.chTag{
+  margin-top:10px;
+  margin-bottom: 10px;
+}
+
+.chMeta{
+  margin-top:auto; /* dorong ke bawah agar sinkron */
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* ================= META ================= */
+.metaPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.72);
+}
+
+.metaPill p{
+  font-size:0.8rem;
+}
+
+.metaIcon{
+  width:16px;
+  height:16px;
+}
+
+/* ================= CATEGORY ================= */
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:12px;
+  padding:7px 10px;
+  border:1px solid rgba(90, 76, 76, 0.1);
+  color:rgba(255,255,255,.85);
+  background:rgba(255,255,255,.04);
+}
+
+.pillIcon{width:16px;height:16px;}
+.pillText{font-size:0.9rem;}
+
+.pill-green { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.25); }
+.pill-red { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.25); }
+.pill-purple { background: rgba(168,85,247,.12); border-color: rgba(168,85,247,.25); }
+.pill-blue { background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.25); }
+.pill-orange { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.25); }
+.pill-gray { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
+
+/* ================= SCANLINES ================= */
+.scanlines{
+  pointer-events:none;
+  position:absolute;
+  inset:0;
+  opacity:.18;
+  background:repeating-linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06) 0px,
+    rgba(255,255,255,0.06) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+  mix-blend-mode:overlay;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width:480px){
+  .wizHeader{height:42px;}
+  .wizTitle{ font-size: 1rem; }
+  .chTitle{font-size:1rem;}
+  .pillText{font-size:0.7rem;}
+  .metaPill p{
+    font-size:0.6rem;
+  }
+}
+</style>

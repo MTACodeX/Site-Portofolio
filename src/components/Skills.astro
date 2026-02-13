@@ -1,0 +1,161 @@
+---
+import { Icon } from "astro-icon/components";
+
+const sections = [
+  {
+    title: "Programming Languages",
+    items: [
+      { name: "PHP", icon: "simple-icons:php" },
+      { name: "HTML", icon: "simple-icons:html5" },
+      { name: "CSS", icon: "simple-icons:css3" },
+      { name: "C++", icon: "simple-icons:cplusplus" },
+      { name: "Python", icon: "simple-icons:python" },
+    ],
+  },
+  {
+    title: "Databases",
+    items: [
+      { name: "MySQL", icon: "simple-icons:mysql" },
+      { name: "MongoDB", icon: "simple-icons:mongodb" },
+    ],
+  },
+  {
+    title: "Daily Driver & Tools",
+    items: [
+      { name: "CachyOS", icon: "simple-icons:linux" },
+      { name: "Fish Shell", icon: "simple-icons:fishshell" },
+    ],
+  },
+];
+---
+
+<section class="page-header">
+  <div class="skills-header">
+    <h1>Skills</h1>
+    <p>
+    Let's connect and collaborate. Feel free to reach out or follow me. I'm open to discussions, new opportunities, and conversations about tech and creativity.
+    </p>
+  </div>
+  {sections.map((section) => (
+    <div class="skill-group">
+      <p>{section.title}</p>
+
+      <div class="grid">
+        {section.items.map((item) => (
+          <div class="card">
+            <Icon name={item.icon} class="skill-icon" style="color: unset;" />
+            <span class="skills-nama">
+              <p>{item.name}</p>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</section>
+
+<style>
+.page-header {
+  max-width: 1100px;   /* atur sesuai selera */
+  margin: 0 auto;      /* bikin center horizontal */
+  padding: 0 1.5rem;   /* biar ada jarak kiri kanan */
+}
+
+.skill-group {
+  margin-bottom: 2.5rem;
+}
+
+.skill-group p {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.skills-header {
+  text-align: center;
+}
+
+.skills-header h1 {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-size: clamp(1.2rem, 4.2vw, 3rem);
+  letter-spacing: 1px;
+  text-transform: none;
+
+  /* kuning neon seperti contoh */
+  color: rgba(245, 158, 11, 0.95);
+  text-shadow: 0 0 14px rgba(245, 158, 11, 0.35),
+    0 0 36px rgba(245, 158, 11, 0.22);
+
+  /* anti overflow */
+  word-break: break-word;
+}
+
+.skills-header p  {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin-top: 4px;
+  margin-bottom: 50px;
+}
+
+.skills-nama p  {
+  font-size: 1.1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;   /* ini yang bikin icon di atas */
+  align-items: center;      /* rata tengah horizontal */
+  justify-content: center;  /* rata tengah vertikal */
+  
+  background: rgba(255, 255, 255, 0.117);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.skill-icon {
+  font-size: 32px;
+}
+
+.card span {
+  font-size: 0.95rem;
+  margin-top: 5px;
+  color: #d4d4d4;
+}
+
+@media (max-width: 768px) {
+  .skills-header p {
+    font-size: 0.8rem;
+  }
+
+  .skills-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .skill-group p {
+    font-size: 1.1rem;
+  }
+
+  .skills-nama p  {
+    font-size: 0.8rem;
+  }
+}
+</style>

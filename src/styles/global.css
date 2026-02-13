@@ -1,0 +1,781 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+
+/* =========================================================
+   GLOBAL STYLES – RESPONSIVE, WIDE, CLEAN + COLORFUL THEME
+   Minecraft-halusan cards (pixel edge but smooth)
+   ========================================================= */
+
+/* =========================================================
+   RESET
+   ========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   ROOT VARIABLES
+   ========================================================= */
+:root {
+  /* Base Background */
+  --bg-primary: #070a12;
+  --bg-secondary: #0b1020;
+  --bg-tertiary: rgba(20, 24, 40, 0.62);
+
+  /* Text */
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.72);
+  --text-tertiary: rgba(255, 255, 255, 0.55);
+
+  /* Borders / Surfaces */
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-color-hover: rgba(255, 255, 255, 0.22);
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.09);
+
+  /* Accent Palette (sinkron & berwarna) */
+  --accent-emerald: #22c55e;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #a78bfa;
+  --accent-amber: #f59e0b;
+  --danger: #ef4444;
+
+  /* Typography (pixel/arcade) */
+  --font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: "Space Mono", monospace;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  /* Pixel-ish thickness */
+  --px: 3px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  /* Shadows */
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 18px 60px rgba(0, 0, 0, 0.55);
+
+  /* Layout */
+  --container-max-width: 1440px;
+  --container-padding: clamp(16px, 5vw, 64px);
+
+  /* Section spacing */
+  --section-pad-y: clamp(16px, 2.8vw, 28px);
+  --section-gap-y: clamp(12px, 2vw, 20px);
+}
+
+/* Desktop besar */
+@media (min-width: 1400px) {
+  :root {
+    --container-max-width: 1600px;
+  }
+}
+
+/* =========================================================
+   HTML & BODY
+   ========================================================= */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  line-height: 1.65;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  /* Sticky footer */
+  display: flex;
+  flex-direction: column;
+
+  /* Background berwarna tapi tetap dark (sinkron) */
+  background:
+    radial-gradient(1100px 700px at 14% 18%, rgba(34, 197, 94, 0.18), transparent 58%), radial-gradient(900px 650px at 78% 22%, rgba(6, 182, 212, 0.16), transparent 58%),
+    radial-gradient(1100px 780px at 55% 88%, rgba(167, 139, 250, 0.18), transparent 62%), linear-gradient(180deg, var(--bg-primary), var(--bg-secondary) 45%, var(--bg-primary));
+
+  /* font modern/halus */
+  font-feature-settings:
+    "ss01" 1,
+    "ss02" 1,
+    "cv01" 1,
+    "cv02" 1;
+}
+
+/* Grain / noise halus biar tidak flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* wrapper utama (kalau navbar fixed, ini offset-nya) */
+.main-wrapper {
+  width: 100%;
+  margin: 0;
+  padding-top: 96px;
+  flex: 1; /* penting agar footer mentok bawah */
+}
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+  font-family: var(--font-display);
+}
+
+h1 {
+  font-size: 1rem;
+}
+h2 {
+  font-size: 1rem;
+}
+h3 {
+  font-size: 1rem;
+}
+h4 {
+  font-size: 1rem;
+}
+h5 {
+  font-size: 1rem;
+}
+h6 {
+  font-size: 1rem;
+}
+
+p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-family);
+  font-feature-settings:
+    "liga" 1,
+    "calt" 1;
+}
+
+code {
+  font-size: 1.1em;
+}
+pre {
+  overflow: auto;
+  line-height: 1.7;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition:
+    color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+a:hover {
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+.page-header {
+  padding: 28px 0 18px;
+  text-align: center;
+}
+
+.page-header h1 {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 4.2vw, 3rem);
+  letter-spacing: 2px;
+  text-transform: none;
+  color: rgba(245, 158, 11, 0.95);
+  text-shadow:
+    0 0 14px rgba(245, 158, 11, 0.35),
+    0 0 36px rgba(245, 158, 11, 0.22);
+  word-break: break-word;
+}
+
+.page-header p {
+  max-width: 900px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1.1rem;
+}
+
+.kicker {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+  letter-spacing: 2px;
+  text-transform: none;
+  color: rgba(245, 158, 11, 0.95);
+  text-shadow:
+    0 0 14px rgba(245, 158, 11, 0.35),
+    0 0 36px rgba(245, 158, 11, 0.22);
+  word-break: break-word;
+}
+
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.76);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: none;
+  justify-content: center;
+}
+
+.kickerIcon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+/* =========================================================
+   SECTION GLOBAL
+   ========================================================= */
+section {
+  padding-block: var(--section-pad-y);
+}
+.section-tight {
+  padding-block: var(--section-gap-y);
+}
+
+/* =========================================================
+   CONTAINERS
+   ========================================================= */
+.container {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  width: 100%;
+}
+
+.container-fluid {
+  width: 100%;
+  padding-inline: var(--container-padding);
+}
+
+.container-text {
+  max-width: 900px;
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* =========================================================
+   GRID SYSTEM
+   ========================================================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(12px, 2.2vw, 22px);
+}
+
+/* grid khusus cards (opsional) */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 900px) {
+  .grid-cards {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .grid-cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.bg-primary {
+  background: var(--bg-primary);
+}
+.bg-secondary {
+  background: var(--bg-secondary);
+}
+
+.full-width {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   MINECRAFT-HALUS CARD SYSTEM
+   ========================================================= */
+.card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(12, 16, 28, 0.406), rgba(12, 16, 28, 0.337));
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  transform: translateY(0);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background:
+    radial-gradient(560px 180px at 18% 0%, rgba(12, 16, 28, 0.222), transparent 40%), radial-gradient(520px 220px at 92% 10%, rgba(12, 16, 28, 0.333), transparent 40%),
+    radial-gradient(520px 240px at 50% 110%, rgba(12, 16, 28, 0.377), transparent 40%);
+  opacity: 0.9;
+  pointer-events: none;
+  mask: linear-gradient(#000, transparent 75%);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-color-hover);
+  box-shadow: var(--shadow-strong);
+}
+
+/* Pixel edge wrapper (Minecraft-ish) */
+.card--pixel {
+  border: none;
+  padding: var(--px);
+  border-radius: calc(var(--radius-xl) - 3px);
+  background: linear-gradient(180deg, rgba(12, 16, 28, 0.55), rgba(12, 16, 28, 0.55));
+}
+
+.card--pixel > .card__inner {
+  border-radius: calc(var(--radius-xl) - 3px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 16, 28, 0.906);
+  padding: 1rem;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+/* Title/paragraph helpers */
+.h-title {
+  font-size: 1.35rem;
+  margin: 0;
+  letter-spacing: 0.5px;
+  font-family: var(--font-display);
+}
+.p-muted {
+  color: var(--text-secondary);
+  margin: 0.35rem 0 0;
+}
+.p-faint {
+  color: var(--text-tertiary);
+  margin: 0.35rem 0 0;
+}
+
+/* Badges (kategori, tahun, difficulty, dll) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.32rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  font-size: 1.2rem; /* VT323 */
+}
+
+.badge--green {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.12);
+  color: rgba(220, 255, 235, 0.92);
+}
+.badge--cyan {
+  border-color: rgba(6, 182, 212, 0.35);
+  background: rgba(6, 182, 212, 0.12);
+  color: rgba(220, 250, 255, 0.92);
+}
+.badge--purple {
+  border-color: rgba(167, 139, 250, 0.35);
+  background: rgba(167, 139, 250, 0.12);
+  color: rgba(240, 230, 255, 0.92);
+}
+.badge--amber {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.12);
+  color: rgba(255, 244, 220, 0.92);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.btn--accent {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.08));
+}
+
+.btn--accent:hover {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.28), rgba(34, 197, 94, 0.1));
+}
+
+/* =========================================================
+   FLOATING TOAST
+   ========================================================= */
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition: all 0.35s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.toast.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+}
+
+.toast .countdown {
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+.contact-form button:disabled {
+  opacity: 0.1;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   SELECTION & SCROLLBAR
+   ========================================================= */
+::selection {
+  background: rgba(34, 197, 94, 0.22);
+  color: var(--text-primary);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+}
+
+/* =========================================================
+   CONTACT FORM
+   ========================================================= */
+.contact-section {
+  padding: 10px 0 100px;
+}
+
+.contact-wrapper {
+  width: 100%;
+}
+.contact-card {
+  width: 100%;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.75rem;
+  color: inherit;
+  font-size: 1.15rem;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: rgba(6, 182, 212, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-form button {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-status {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+}
+.form-status.success {
+  color: #4ade80;
+}
+.form-status.error {
+  color: #f87171;
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   MOBILE NAV (base styles - navbar component overrides detail)
+   ========================================================= */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menu-toggle span {
+  width: 22px;
+  height: 2px;
+  background: #fff;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 72px;
+  right: 24px;
+  background: rgba(11, 16, 32, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 160px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+}
+
+.mobile-menu.open {
+  display: flex;
+}
+
+/* =========================================================
+   SCROLL REVEAL ANIMATION
+   ========================================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional variasi arah */
+.reveal-left {
+  transform: translateX(-60px);
+}
+
+.reveal-right {
+  transform: translateX(60px);
+}
+
+.reveal-left.show,
+.reveal-right.show {
+  transform: translateX(0);
+}
+
+/* =========================================
+   ANIMATED PARTICLE BACKGROUND
+========================================= */
+
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Supaya layer di atasnya tetap clean */
+body {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 768px) {
+  body {
+    font-size: 17px; /* VT323 biar nyaman */
+  }
+
+  p {
+    line-height: 1.7;
+  }
+
+  h1 {
+    font-size: 1rem;
+  }
+  h2 {
+    font-size: 1.05rem;
+  }
+  h3 {
+    font-size: 1.05rem;
+  }
+
+  .page-header {
+    padding: 20px 0 14px;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .page-header p {
+    font-size: 0.8rem;
+  }
+
+  .hero-kicker {
+    font-size: 0.62rem;
+    padding: 7px 10px;
+    border-radius: 12px;
+  }
+
+  .toast {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    text-align: center;
+  }
+}

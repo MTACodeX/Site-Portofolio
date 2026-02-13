@@ -1,0 +1,183 @@
+---
+import { Github, Instagram, Youtube, Linkedin } from "lucide-astro";
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">
+        <span class="logo-text">mtacodex</span><span class="logo-dot">.</span><span class="logo-dev">dev</span>
+      </div>
+      <!--<p class="footer-desc">CTF Player • Web • Reverse • Forensic</p> -->
+    </div>
+
+    <div class="footer-social">
+      <span class="social-title">Connection</span>
+      <div class="social-icons">
+        <!--<a href="https://github.com/MTACodeX" aria-label="GitHub" class="social-link">
+          <Github size={20} />
+          <span class="tooltip">GitHub</span>
+        </a>-->
+        <a href="https://instagram.com/rmntaa_" aria-label="Instagram" class="social-link">
+          <Instagram size={20} />
+          <span class="tooltip">Instagram</span>
+        </a>
+        <a href="https://youtube.com/@MantaChannel" aria-label="YouTube" class="social-link">
+          <Youtube size={20} />
+          <span class="tooltip">YouTube</span>
+        </a>
+        <a href="https://www.linkedin.com/in/abdullah-rahmanta/" aria-label="LinkedIn" class="social-link">
+          <Linkedin size={20} />
+          <span class="tooltip">LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © {year} mtacodex.dev — All rights reserved.
+  </div>
+</footer>
+
+<style>
+.footer {
+  margin-top: auto; /* sticky footer */
+  background: rgb(11, 16, 32);
+  border-top: 1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(14px);
+}
+
+.footer-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 34px clamp(18px, 5vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 34px;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.logo-text { color: rgba(255,255,255,.92); font-family: var(--font-display); }
+.logo-dot  { color: var(--accent-emerald); font-family: var(--font-display); }
+.logo-dev  { color: rgba(255,255,255,.72); font-family: var(--font-display); }
+
+.footer-desc {
+  margin-top: 10px;
+  color: rgba(255,255,255,.70);
+  font-size: 1.05rem;
+}
+
+.footer-social { text-align: center; }
+
+.social-title {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: rgba(255,255,255,.72);
+  font-size: 0.95rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.social-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 14px;
+
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(255,255,255,.70);
+  transition: .15s ease;
+}
+
+.social-link:hover {
+  color: rgba(255,255,255,.95);
+  border-color: rgba(34,197,94,.30);
+  background: rgba(34,197,94,.10);
+  transform: translateY(-2px);
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(11, 16, 32, 0.98);
+  color: rgba(255,255,255,.95);
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(11, 16, 32, 0.98);
+}
+
+.social-link:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-12px);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 14px;
+  font-size: 1rem;
+  color: rgba(255,255,255,.55);
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-bottom {
+    font-size: 0.8rem;
+  }
+
+  .social-title {
+    font-size: 0.8rem;
+  }
+
+  .tooltip {
+    font-size: 0.8rem;
+  }
+
+  .logo-text  {
+    font-size: 1.1rem;
+  }
+
+  .logo-dev {
+    font-size: 1.1rem;
+  }
+}
+</style>

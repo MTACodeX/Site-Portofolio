@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CardEvent from "../components/CardEvent.astro";
+import { loadAllEvents, loadChallengesForEvent } from "../utils/writeups";
+import { Icon } from "astro-icon/components";
+
+const events = await loadAllEvents();
+const byYear = new Map<number, any[]>();
+
+for (const e of events) {
+  const challenges = await loadChallengesForEvent({
+    eventDir: e.dirName,
+    year: e.meta.year,
+    eventSlug: e.meta.slug,
+  });
+
+  const categories = Array.from(new Set(challenges.map(c => c.meta.category)));
+
+  if (!byYear.has(e.meta.year)) byYear.set(e.meta.year, []);
+  byYear.get(e.meta.year)!.push({
+    name: e.meta.name,
+    start: e.meta.start,
+    end: e.meta.end,
+    challengeCount: challenges.length,
+    team: e.meta.team,
+    categories,
+    href: `/writeups/${e.meta.year}/${e.meta.slug}`,
+  });
+}
+
+const years = Array.from(byYear.keys()).sort((a,b)=>b-a);
+---
+
+<BaseLayout title="Writeups">
+  <section class="page-header">
+    <div class="container">
+      <div class="hero-kicker">
+        <Icon name="mdi:file-document-edit-outline" class="kickerIcon" />
+        Writeups
+      </div>
+      <div class="kicker">
+        <h1>WRITE_UP</h1>
+      </div>
+      <p>CTF competitions and challenge writeups</p>
+    </div>
+  </section>
+
+  <main class="container main">
+    {years.map(year => (
+      <section class="year section-gap">
+        <div class="year-head">
+          <h2>{year}</h2>
+          <p>{byYear.get(year)!.length} Competitions</p>
+        </div>
+
+        <div class="event-list">
+          {byYear.get(year)!.map(e => <CardEvent {...e} />)}
+        </div>
+      </section>
+    ))}
+  </main>
+
+  <style>
+    .main{ padding-top: 8px; padding-bottom: 34px; }
+
+    /* rapetin antar tahun */
+    .year{ margin-top: 5px; }
+
+    .year-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .year-head h2{
+      margin:0;
+      color:rgba(255,255,255,.70);
+      font-size:20px;
+      font-weight:700;
+    }
+
+    .year-head p{
+      font-size:15px;
+    }
+
+    .event-list{
+      margin-top: 12px;
+      display:flex;
+      flex-direction:column;
+      gap:25px;
+    }
+
+  @media (max-width:480px){
+    .year-head h2{font-size:1rem;}
+    .year-head P{font-size:0.8rem;}
+  }
+  </style>
