@@ -1,16 +1,9 @@
 [
   {
-    "title": "HackTheBox - Bashed",
-    "description": "A beginner-friendly Linux machine focus on web enumeration and privilege escalation.",
-    "tags": ["Linux", "Privilege Escalation"],
+    "title": "Site Portofolio",
+    "description": "A personal portfolio website showcasing projects, skills, and experience in web development and cybersecurity.",
+    "tags": ["Web Development", "Portfolio", "Frontend", "Backend"],
     "href": "/projects/bashed",
-    "image": "2.png"
-  },
-  {
-    "title": "CTF Helper Scripts",
-    "description": "A beginner-",
-    "tags": ["Python", "Automation"],
-    "href": "/projects/ctf-helper",
-    "image": "1.png"
+    "image": "portofolio.png"
   }
 ]
