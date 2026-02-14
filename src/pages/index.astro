@@ -10,7 +10,6 @@ import Skills from "../components/Skills.astro";
   <div class="container">
     <section class="hero">
       <div class="hero-grid">
-        <!-- HEADER KIRI -->
         <div class="hero-head">
           <div class="hero-kicker">
             <Icon name="mdi:home-variant-outline" class="kickerIcon" />
@@ -22,7 +21,6 @@ import Skills from "../components/Skills.astro";
           </p>
         </div>
 
-        <!-- IMAGE KANAN (SEJAJAR KICKER) -->
         <div class="hero-image">
           <div class="card-image-frame" aria-label="Profile image card">
             <div class="card-image-inner">
@@ -32,7 +30,6 @@ import Skills from "../components/Skills.astro";
           </div>
         </div>
 
-        <!-- TERMINAL KIRI BAWAH -->
         <section class="container-main">
           <div class="hero-terminal">
             <TerminalHero />
@@ -45,9 +42,6 @@ import Skills from "../components/Skills.astro";
 </BaseLayout>
 
 <style>
-/* =========================================================
-   HERO LAYOUT – GRID 2 ROWS (biar image sejajar kicker)
-   ========================================================= */
 .hero {
   padding-block: clamp(42px, 8vw, 110px);
 }
@@ -55,17 +49,14 @@ import Skills from "../components/Skills.astro";
 .hero-grid {
   display: grid;
 
-  /* 2 kolom: kiri konten, kanan image */
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.55fr);
 
-  /* 2 baris: header + terminal */
   grid-template-rows: auto 1fr;
 
   gap: clamp(20px, 4vw, 56px);
   align-items: start;
 }
 
-/* posisi elemen dalam grid */
 .hero-head {
   grid-column: 1;
   grid-row: 1;
@@ -73,7 +64,7 @@ import Skills from "../components/Skills.astro";
 
 .hero-image {
   grid-column: 2;
-  grid-row: 1 / span 2; /* <- kunci: image ikut dari atas */
+  grid-row: 1 / span 2;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -84,9 +75,6 @@ import Skills from "../components/Skills.astro";
   grid-row: 2;
 }
 
-/* =========================================================
-   HEADER STYLE
-   ========================================================= */
 .hero-kicker {
   display: inline-flex;
   align-items: center;
@@ -112,12 +100,10 @@ import Skills from "../components/Skills.astro";
   letter-spacing: 2px;
   text-transform: none;
 
-  /* kuning neon seperti contoh */
   color: rgba(245, 158, 11, 0.95);
   text-shadow: 0 0 14px rgba(245, 158, 11, 0.35),
     0 0 36px rgba(245, 158, 11, 0.22);
 
-  /* anti overflow */
   word-break: break-word;
 }
 
@@ -127,9 +113,6 @@ import Skills from "../components/Skills.astro";
   margin-top: 4px;
 }
 
-/* =========================================================
-   IMAGE CARD – ANIMATION (sinkron theme)
-   ========================================================= */
 .card-image-frame {
   position: relative;
   width: 100%;
@@ -176,7 +159,6 @@ import Skills from "../components/Skills.astro";
   filter: grayscale(0%) brightness(1);
 }
 
-/* Shine effect */
 .card-image-frame .shine {
   position: absolute;
   inset: 0;
@@ -196,9 +178,6 @@ import Skills from "../components/Skills.astro";
   opacity: 1;
 }
 
-/* =========================================================
-   RESPONSIVE (Tablet)
-   ========================================================= */
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -223,9 +202,6 @@ import Skills from "../components/Skills.astro";
   }
 }
 
-/* =========================================================
-   RESPONSIVE (Mobile Fix - biar tidak kebesaran)
-   ========================================================= */
 @media (max-width: 768px) {
   .arcade-title {
     font-size: 1.55rem;

@@ -60,7 +60,6 @@ const catColor = (c: string) => {
 </a>
 
 <style>
-/* ================= CARD ================= */
 .wizCard{
   display:flex;
   flex-direction:column;
@@ -83,7 +82,6 @@ const catColor = (c: string) => {
   background:rgb(12,16,28);
 }
 
-/* ================= HEADER ================= */
 .wizHeader{
   height:44px;
   display:flex;
@@ -125,7 +123,6 @@ const catColor = (c: string) => {
   color:#ef4444;
 }
 
-/* ================= BODY ================= */
 .wizBody{
   position:relative;
   padding:14px 14px 16px;
@@ -134,7 +131,6 @@ const catColor = (c: string) => {
   flex:1;
 }
 
-/* FIX HEIGHT SYNC */
 .chTitle{
   font-size:1.25rem;
   font-weight:bold;
@@ -146,7 +142,7 @@ const catColor = (c: string) => {
   -webkit-box-orient:vertical;
   overflow:hidden;
 
-  min-height:3rem; /* biar semua title punya tinggi sama */
+  min-height:3rem;
 }
 
 .chTag{
@@ -155,13 +151,12 @@ const catColor = (c: string) => {
 }
 
 .chMeta{
-  margin-top:auto; /* dorong ke bawah agar sinkron */
+  margin-top:auto; 
   display:flex;
   gap:10px;
   flex-wrap:wrap;
 }
 
-/* ================= META ================= */
 .metaPill{
   display:inline-flex;
   align-items:center;
@@ -182,7 +177,6 @@ const catColor = (c: string) => {
   height:16px;
 }
 
-/* ================= CATEGORY ================= */
 .pill{
   display:inline-flex;
   align-items:center;
@@ -204,7 +198,6 @@ const catColor = (c: string) => {
 .pill-orange { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.25); }
 .pill-gray { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
 
-/* ================= SCANLINES ================= */
 .scanlines{
   pointer-events:none;
   position:absolute;
@@ -220,7 +213,6 @@ const catColor = (c: string) => {
   mix-blend-mode:overlay;
 }
 
-/* ================= MOBILE ================= */
 @media (max-width:480px){
   .wizHeader{height:42px;}
   .wizTitle{ font-size: 1rem; }
