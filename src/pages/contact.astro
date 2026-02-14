@@ -14,7 +14,7 @@ import { Icon } from "astro-icon/components";
         <h1>CONTACT_ME</h1>
       </div>
       <p>
-      Please contact me for more information or questions related to mtacodex.dev or other topics. I will respond to your message within a maximum of 24 hours.
+        Please contact me for more information or questions related to mtacodex.dev or other topics. I will respond to your message within a maximum of 24 hours.
       </p>
     </div>
   </section>
@@ -89,136 +89,109 @@ import { Icon } from "astro-icon/components";
         </form>
       </div>
     </div>
+
     <div id="form-status" class="toast"></div>
   </main>
 </BaseLayout>
 
-  <script>
-    const form = document.getElementById("contact-form");
-    const toast = document.getElementById("form-status");
-    const submitBtn = form?.querySelector("button");
+<script>
+  const form = document.getElementById("contact-form");
+  const toast = document.getElementById("form-status");
+  const submitBtn = form?.querySelector("button");
 
-    const COOLDOWN = 15;
-    let lastSubmitTime = 0;
-    let cooldownTimer = null;
+  const COOLDOWN = 15;
+  let lastSubmitTime = 0;
+  let cooldownTimer = null;
 
-    const ICONS = {
-      loading: `
-        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2a10 10 0 1 0 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      `,
-      success: `
-        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-          <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      `,
-      error: `
-        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      `,
-      warning: `
-        <svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-          <path d="M12 9v4m0 4h.01M10.29 3.86l-8.5 14.72A2 2 0 0 0 3.5 21h17a2 2 0 0 0 1.71-2.42l-8.5-14.72a2 2 0 0 0-3.42 0Z"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      `
-    };
+  const ICONS = {
+    loading: `<svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 1 0 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    success: `<svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    error: `<svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    warning: `<svg class="toastIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86l-8.5 14.72A2 2 0 0 0 3.5 21h17a2 2 0 0 0 1.71-2.42l-8.5-14.72a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  };
 
-    function showToast(message, type = "", autoHide = true) {
-      if (!toast) return;
+  function showToast(message, type = "", autoHide = true) {
+    if (!toast) return;
+    toast.className = `toast show ${type}`.trim();
+    toast.innerHTML = message;
 
-      toast.className = `toast show ${type}`.trim();
-      toast.innerHTML = message;
+    if (autoHide) setTimeout(() => toast.classList.remove("show"), 4000);
+  }
 
-      if (autoHide) {
-        setTimeout(() => {
-          toast.classList.remove("show");
-        }, 4000);
+  function startCooldown(seconds) {
+    if (!submitBtn) return;
+    submitBtn.disabled = true;
+    let remaining = seconds;
+
+    showToast(`${ICONS.warning} Too many attempts. Wait <span class="countdown">${remaining}</span>s`, "warning", false);
+
+    cooldownTimer = setInterval(() => {
+      remaining--;
+      const cd = toast?.querySelector(".countdown");
+      if (cd) cd.textContent = remaining;
+
+      if (remaining <= 0) {
+        clearInterval(cooldownTimer);
+        submitBtn.disabled = false;
+        toast?.classList.remove("show");
       }
+    }, 1000);
+  }
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const now = Date.now();
+    const diff = Math.floor((now - lastSubmitTime) / 1000);
+
+    if (diff < COOLDOWN) {
+      startCooldown(COOLDOWN - diff);
+      return;
     }
 
-    function startCooldown(seconds) {
-      if (!submitBtn) return;
-      submitBtn.disabled = true;
+    lastSubmitTime = now;
+    if (submitBtn) submitBtn.disabled = true;
 
-      let remaining = seconds;
+    showToast(`${ICONS.loading} Sending message...`);
 
-      showToast(
-        `${ICONS.warning} Terlalu banyak percobaan. Tunggu <span class="countdown">${remaining}</span> detik`,
-        "warning",
-        false
-      );
+    const FORM_ENDPOINT = `https://formspree.io/f/${import.meta.env.PUBLIC_FORMSPREE_KEY}`;
 
-      cooldownTimer = setInterval(() => {
-        remaining--;
-        const cd = toast?.querySelector(".countdown");
-        if (cd) cd.textContent = remaining;
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" }
+      });
 
-        if (remaining <= 0) {
-          clearInterval(cooldownTimer);
-          submitBtn.disabled = false;
-          toast?.classList.remove("show");
-        }
-      }, 1000);
+      if (res.ok) {
+        form.reset();
+        showToast(`${ICONS.success} Message sent successfully!`, "success");
+      } else {
+        const errorText = await res.text();
+        console.error("Formspree Error:", res.status, errorText);
+        showToast(`${ICONS.error} Failed to send message.`, "error");
+      }
+    } catch (err) {
+      console.error("Network Error:", err);
+      showToast(`${ICONS.error} Network error occurred.`, "error");
+    } finally {
+      setTimeout(() => {
+        if (submitBtn) submitBtn.disabled = false;
+      }, 2000);
     }
+  });
 
-    form?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const now = Date.now();
-      const diff = Math.floor((now - lastSubmitTime) / 1000);
-
-      if (diff < COOLDOWN) {
-        startCooldown(COOLDOWN - diff);
-        return;
-      }
-
-      lastSubmitTime = now;
-      if (submitBtn) submitBtn.disabled = true;
-
-      showToast(`${ICONS.loading} Mengirim pesan...`);
-
-      try {
-        const res = await fetch("https://formspree.io/f/mojlbwdl", {
-          method: "POST",
-          body: new FormData(form),
-          headers: { Accept: "application/json" }
-        });
-
-        if (res.ok) {
-          form.reset();
-          showToast(`${ICONS.success} Pesan berhasil terkirim!`, "success");
-        } else {
-          showToast(`${ICONS.error} Gagal mengirim pesan.`, "error");
-        }
-      } catch {
-        showToast(`${ICONS.error} Koneksi bermasalah.`, "error");
-      } finally {
-        setTimeout(() => {
-          if (submitBtn) submitBtn.disabled = false;
-        }, 2000);
-      }
-    });
-    
-    const reveals = document.querySelectorAll(".reveal");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-          }
-        });
-      },
-      {
-        threshold: 0.15,
-      }
-    );
-
-    reveals.forEach((el) => observer.observe(el));
-  </script>
+  const reveals = document.querySelectorAll(".reveal");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("show");
+      });
+    },
+    { threshold: 0.15 }
+  );
+  reveals.forEach(el => observer.observe(el));
+</script>
 
 <style>
   .card__inner .contact-card .card__inner {
