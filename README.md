@@ -161,7 +161,7 @@ Example:
     "description": "Description Website Projects",
     "tags": ["tags1", "tags2", "tags3"],
     "href": "https://github.com/username/repo",
-    "image": "/assets/projects/thumnail.png"
+    "image": "/assets/projects/thumbnail.png"
   }
 ]
 ```
