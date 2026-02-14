@@ -50,14 +50,13 @@ Writeups are organized hierarchically for scalability and maintainability.
 
 ```
 src/data/writeups/events/{year}/{event}/
-├── event.json
-└── challenges/
-    ├── binary/
-    ├── forensics/
-    ├── misc/
-    ├── mobile/
-    ├── reverse/
-    └── web/
+└── event.json                  └── challenges/
+                                    ├── binary/
+                                    ├── forensics/
+                                    ├── misc/
+                                    ├── mobile/
+                                    ├── reverse/
+                                    └── web/
 ```
 
 ---
