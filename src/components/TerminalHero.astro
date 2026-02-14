@@ -80,20 +80,17 @@ import { Icon } from "astro-icon/components";
 </script>
 
 <style>
-/* Wrapper biar gampang ditata di layout */
 .terminal-wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-/* Pakai class global: .card .card--pixel, ini hanya styling tambahan */
 .terminal-window {
   width: 100%;
   max-width: 1200px;
   display: block;
 
-  /* anti ketimpa */
   text-align: left !important;
 }
 
@@ -102,7 +99,6 @@ import { Icon } from "astro-icon/components";
   overflow: hidden;
 }
 
-/* Header seperti UI “OS” di gambar */
 .terminal-header {
   display: flex;
   align-items: center;
@@ -113,7 +109,6 @@ import { Icon } from "astro-icon/components";
   text-align: left;
 }
 
-/* Dots window */
 .dots {
   display: inline-flex;
   gap: 8px;
@@ -147,7 +142,6 @@ import { Icon } from "astro-icon/components";
   margin-left: 2px;
 }
 
-/* Chip hijau seperti label “WIZARD_OS” */
 .chip {
   margin-left: auto;
   padding: 8px 12px;
@@ -162,7 +156,6 @@ import { Icon } from "astro-icon/components";
   box-shadow: 0 10px 24px rgba(0,0,0,0.35);
 }
 
-/* Body terminal */
 .terminal-body {
   padding: 18px 18px 22px;
   font-family: var(--font-family);
@@ -173,14 +166,11 @@ import { Icon } from "astro-icon/components";
   overflow-y: auto;
   line-height: 1.6;
 
-  /* lock rata kiri */
   text-align: left !important;
 
-  /* background gelap lebih kontras */
   background: rgba(8, 10, 18, 0.55);
 }
 
-/* Line terminal */
 .terminal-line {
   display: block;
   margin-bottom: 8px;
@@ -203,13 +193,11 @@ import { Icon } from "astro-icon/components";
   animation: blink 1s infinite;
 }
 
-/* Cursor blink */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
 
-/* Scrollbar terminal */
 .terminal-body::-webkit-scrollbar {
   width: 8px;
 }
@@ -224,7 +212,6 @@ import { Icon } from "astro-icon/components";
   background: rgba(255,255,255,0.28);
 }
 
-/* Mobile */
 @media (max-width: 768px) {
   .terminal-body {
     font-size: 0.8rem;
