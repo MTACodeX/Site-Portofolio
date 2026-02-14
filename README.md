@@ -162,11 +162,11 @@ Example:
 ```json
 [
   {
-    "title": "Portfolio Website",
-    "description": "Personal website built with Astro",
-    "image": "/assets/projects/portofolio.png",
-    "github": "https://github.com/username/repo",
-    "demo": "https://yourwebsite.com"
+    "title": "Title Projects Website",
+    "description": "Description Website Projects",
+    "tags": ["tags1", "tags2", "tags3"],
+    "href": "https://github.com/username/repo",
+    "image": "/assets/projects/thumnail.png"
   }
 ]
 ```
@@ -197,7 +197,7 @@ abcxyz123
 
 ---
 
-## ⚙️ 2️⃣ Add Environment Variable For Formspree.io
+## ⚙️ 2️⃣ Add Environment Variable For Formspree
 
 Create a `.env` file in the root directory:
 
