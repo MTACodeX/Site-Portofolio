@@ -15,13 +15,13 @@ export type EventMeta = {
 export type ChallengeMeta = {
   title: string;
   description: string;
-  category: string; // display label (sudah dinormalisasi)
+  category: string;
   points: number;
   solves: number;
-  slug: string; // untuk URL (dari frontmatter.slug atau nama file)
+  slug: string;
   year: number;
   eventSlug: string;
-  categorySlug: string; // folder slug (web/misc/forensics/...) untuk URL
+  categorySlug: string;
   href: string;
   flag?: string | null;
 };
@@ -83,7 +83,6 @@ export async function loadChallengesForEvent(params: { eventDir: string; year: n
       .map(async ([path, loader]) => {
         const mod: any = await (loader as any)();
 
-        // rel: <categorySlug>/<file>.md
         const rel = path.replace(wantedPrefix, "");
         const m = rel.match(/^([^/]+)\/([^/]+)\.md$/);
 
@@ -91,9 +90,6 @@ export async function loadChallengesForEvent(params: { eventDir: string; year: n
         const fileSlug = m?.[2] ?? "challenge";
 
         const slug = mod.frontmatter?.slug ?? fileSlug;
-
-        // 🔥 INI YANG DIPERBAIKI:
-        // kalau category di frontmatter "web" atau folder "web" → tampil "Web Exploitation"
         const rawCategory = mod.frontmatter?.category ?? categorySlug;
         const category = normalizeCategory(String(rawCategory));
 

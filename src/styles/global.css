@@ -1,13 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
-
-/* =========================================================
-   GLOBAL STYLES – RESPONSIVE, WIDE, CLEAN + COLORFUL THEME
-   Minecraft-halusan cards (pixel edge but smooth)
-   ========================================================= */
-
-/* =========================================================
-   RESET
-   ========================================================= */
 *,
 *::before,
 *::after {
@@ -16,38 +7,29 @@
   padding: 0;
 }
 
-/* =========================================================
-   ROOT VARIABLES
-   ========================================================= */
 :root {
-  /* Base Background */
   --bg-primary: #070a12;
   --bg-secondary: #0b1020;
   --bg-tertiary: rgba(20, 24, 40, 0.62);
 
-  /* Text */
   --text-primary: rgba(255, 255, 255, 0.92);
   --text-secondary: rgba(255, 255, 255, 0.72);
   --text-tertiary: rgba(255, 255, 255, 0.55);
 
-  /* Borders / Surfaces */
   --border-color: rgba(255, 255, 255, 0.12);
   --border-color-hover: rgba(255, 255, 255, 0.22);
   --surface: rgba(255, 255, 255, 0.06);
   --surface-2: rgba(255, 255, 255, 0.09);
 
-  /* Accent Palette (sinkron & berwarna) */
   --accent-emerald: #22c55e;
   --accent-cyan: #06b6d4;
   --accent-purple: #a78bfa;
   --accent-amber: #f59e0b;
   --danger: #ef4444;
 
-  /* Typography (pixel/arcade) */
   --font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-display: "Space Mono", monospace;
 
-  /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
@@ -56,43 +38,33 @@
   --spacing-2xl: 48px;
   --spacing-3xl: 64px;
 
-  /* Radius */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-xl: 18px;
 
-  /* Pixel-ish thickness */
   --px: 3px;
 
-  /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
 
-  /* Shadows */
   --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 18px 60px rgba(0, 0, 0, 0.55);
 
-  /* Layout */
   --container-max-width: 1440px;
   --container-padding: clamp(16px, 5vw, 64px);
 
-  /* Section spacing */
   --section-pad-y: clamp(16px, 2.8vw, 28px);
   --section-gap-y: clamp(12px, 2vw, 20px);
 }
 
-/* Desktop besar */
 @media (min-width: 1400px) {
   :root {
     --container-max-width: 1600px;
   }
 }
 
-/* =========================================================
-   HTML & BODY
-   ========================================================= */
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -104,6 +76,8 @@ html {
 html,
 body {
   height: 100%;
+  overscroll-behavior: none;
+
 }
 
 body {
@@ -112,17 +86,17 @@ body {
   line-height: 1.65;
   min-height: 100vh;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 
-  /* Sticky footer */
   display: flex;
   flex-direction: column;
 
-  /* Background berwarna tapi tetap dark (sinkron) */
   background:
-    radial-gradient(1100px 700px at 14% 18%, rgba(34, 197, 94, 0.18), transparent 58%), radial-gradient(900px 650px at 78% 22%, rgba(6, 182, 212, 0.16), transparent 58%),
-    radial-gradient(1100px 780px at 55% 88%, rgba(167, 139, 250, 0.18), transparent 62%), linear-gradient(180deg, var(--bg-primary), var(--bg-secondary) 45%, var(--bg-primary));
-
-  /* font modern/halus */
+    radial-gradient(1100px 700px at 14% 18%, rgba(34, 197, 94, 0.18), transparent 58%),
+    radial-gradient(900px 650px at 78% 22%, rgba(6, 182, 212, 0.16), transparent 58%),
+    radial-gradient(1100px 780px at 55% 88%, rgba(167, 139, 250, 0.18), transparent 62%),
+    linear-gradient(180deg, var(--bg-primary), var(--bg-secondary) 45%, var(--bg-primary));
+    
   font-feature-settings:
     "ss01" 1,
     "ss02" 1,
@@ -130,7 +104,6 @@ body {
     "cv02" 1;
 }
 
-/* Grain / noise halus biar tidak flat */
 body::before {
   content: "";
   position: fixed;
@@ -141,17 +114,13 @@ body::before {
   mix-blend-mode: overlay;
 }
 
-/* wrapper utama (kalau navbar fixed, ini offset-nya) */
 .main-wrapper {
   width: 100%;
   margin: 0;
   padding-top: 96px;
-  flex: 1; /* penting agar footer mentok bawah */
+  flex: 1;
 }
 
-/* =========================================================
-   TYPOGRAPHY
-   ========================================================= */
 h1,
 h2,
 h3,
@@ -218,9 +187,6 @@ a:hover {
   color: var(--text-secondary);
 }
 
-/* =========================================================
-   PAGE HEADER
-   ========================================================= */
 .page-header {
   padding: 28px 0 18px;
   text-align: center;
@@ -283,9 +249,6 @@ a:hover {
   opacity: 0.9;
 }
 
-/* =========================================================
-   SECTION GLOBAL
-   ========================================================= */
 section {
   padding-block: var(--section-pad-y);
 }
@@ -293,9 +256,6 @@ section {
   padding-block: var(--section-gap-y);
 }
 
-/* =========================================================
-   CONTAINERS
-   ========================================================= */
 .container {
   max-width: var(--container-max-width);
   margin-inline: auto;
@@ -314,16 +274,12 @@ section {
   padding-inline: var(--container-padding);
 }
 
-/* =========================================================
-   GRID SYSTEM
-   ========================================================= */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: clamp(12px, 2.2vw, 22px);
 }
 
-/* grid khusus cards (opsional) */
 .grid-cards {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -340,9 +296,6 @@ section {
   }
 }
 
-/* =========================================================
-   UTILITIES
-   ========================================================= */
 .text-primary {
   color: var(--text-primary);
 }
@@ -366,9 +319,6 @@ section {
   padding: 0;
 }
 
-/* =========================================================
-   MINECRAFT-HALUS CARD SYSTEM
-   ========================================================= */
 .card {
   position: relative;
   border-radius: var(--radius-xl);
@@ -403,7 +353,6 @@ section {
   box-shadow: var(--shadow-strong);
 }
 
-/* Pixel edge wrapper (Minecraft-ish) */
 .card--pixel {
   border: none;
   padding: var(--px);
@@ -419,7 +368,6 @@ section {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
 }
 
-/* Title/paragraph helpers */
 .h-title {
   font-size: 1.35rem;
   margin: 0;
@@ -435,7 +383,6 @@ section {
   margin: 0.35rem 0 0;
 }
 
-/* Badges (kategori, tahun, difficulty, dll) */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -445,7 +392,7 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-secondary);
-  font-size: 1.2rem; /* VT323 */
+  font-size: 1.2rem;
 }
 
 .badge--green {
@@ -469,7 +416,6 @@ section {
   color: rgba(255, 244, 220, 0.92);
 }
 
-/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -503,9 +449,6 @@ section {
   background: linear-gradient(180deg, rgba(34, 197, 94, 0.28), rgba(34, 197, 94, 0.1));
 }
 
-/* =========================================================
-   FLOATING TOAST
-   ========================================================= */
 .toast {
   position: fixed;
   top: 24px;
@@ -550,9 +493,6 @@ section {
   cursor: not-allowed;
 }
 
-/* =========================================================
-   SELECTION & SCROLLBAR
-   ========================================================= */
 ::selection {
   background: rgba(34, 197, 94, 0.22);
   color: var(--text-primary);
@@ -569,9 +509,6 @@ section {
   border-radius: 6px;
 }
 
-/* =========================================================
-   CONTACT FORM
-   ========================================================= */
 .contact-section {
   padding: 10px 0 100px;
 }
@@ -635,17 +572,11 @@ section {
   color: #f87171;
 }
 
-/* =========================================================
-   FOCUS
-   ========================================================= */
 :focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
 }
 
-/* =========================================================
-   MOBILE NAV (base styles - navbar component overrides detail)
-   ========================================================= */
 .menu-toggle {
   display: none;
   background: none;
@@ -681,10 +612,6 @@ section {
   display: flex;
 }
 
-/* =========================================================
-   SCROLL REVEAL ANIMATION
-   ========================================================= */
-
 .reveal {
   opacity: 0;
   transform: translateY(40px);
@@ -699,7 +626,6 @@ section {
   transform: translateY(0);
 }
 
-/* Optional variasi arah */
 .reveal-left {
   transform: translateX(-60px);
 }
@@ -713,10 +639,6 @@ section {
   transform: translateX(0);
 }
 
-/* =========================================
-   ANIMATED PARTICLE BACKGROUND
-========================================= */
-
 #bg-canvas {
   position: fixed;
   inset: 0;
@@ -726,19 +648,13 @@ section {
   pointer-events: none;
 }
 
-/* Supaya layer di atasnya tetap clean */
 body {
   position: relative;
   z-index: 1;
 }
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 @media (max-width: 768px) {
   body {
-    font-size: 17px; /* VT323 biar nyaman */
-  }
+    font-size: 17px; 
 
   p {
     line-height: 1.7;
