@@ -222,7 +222,7 @@ npm run dev
 # 🛠️ Installation
 
 ```bash
-git clone https://github.com/yourusername/repository.git
+git clone https://github.com/MTACodeX/Site-Portofolio.git
 cd repository
 npm install
 npm run dev
