@@ -106,13 +106,13 @@ Example Markdown:
 
 ```md
 ---
-title: "Binary()"
-category: "binary"
+title: "Name Challenges()"
+category: "web"
 points: 295
 solves: 41
-slug: "binary"
+slug: "challengs-spy"
 description: "Description Challenge."
-flag: "FLAG{binary}"
+flag: "FLAG{Challenges}"
 ---
 
 ## Overview
