@@ -89,11 +89,6 @@ Example:
   "format": "Jeopardy",
   "url": "null",
   "team": true / false
-
-  "name": "My CTF 2026",
-  "year": 2026,
-  "description": "Short description about this CTF event.",
-  "banner": "/assets/bingkai.jpg"
 }
 ```
 
